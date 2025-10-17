@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image to URL Converter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ Image to URL Converter</h1>
+        <p>Upload your image and get a shareable URL</p>
+        
+        <div class="upload-area" id="uploadArea">
+            <input type="file" id="fileInput" accept="image/*" hidden>
+            <div class="upload-box" id="uploadBox">
+                <span class="upload-icon">📁</span>
+                <p>Click to upload image</p>
+                <small>Supports: JPG, PNG, GIF, WebP</small>
+            </div>
+        </div>
+
+        <div class="preview-area" id="previewArea" style="display: none;">
+            <h3>Image Preview:</h3>
+            <img id="previewImage" src="" alt="Preview">
+            <div class="url-result" id="urlResult">
+                <input type="text" id="urlInput" readonly>
+                <button onclick="copyURL()">Copy URL</button>
+            </div>
+        </div>
+
+        <div class="loading" id="loading" style="display: none;">
+            Uploading... ⏳
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
