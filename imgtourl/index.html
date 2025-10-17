@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Drive Uploader</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>☁️ Google Drive Uploader</h1>
+        <p>Upload files directly to your Google Drive</p>
+        
+        <!-- Google Sign-in -->
+        <div class="auth-section">
+            <div id="g_id_onload"
+                data-client_id="583856842529-fqskfnfp60fp4fs3nefeie28ehu6b8pm.apps.googleusercontent.com"
+                data-context="signin"
+                data-ux_mode="popup"
+                data-callback="handleGoogleSignIn"
+                data-auto_prompt="false">
+            </div>
+
+            <div class="g_id_signin"
+                data-type="standard"
+                data-shape="rectangular"
+                data-theme="filled_blue"
+                data-text="signin_with"
+                data-size="large"
+                data-logo_alignment="left">
+            </div>
+
+            <button id="signOutButton" class="logout-btn" style="display: none;" onclick="handleSignOut()">
+                Sign Out
+            </button>
+            
+            <div id="userInfo" class="user-info"></div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-section" id="uploadSection" style="display: none;">
+            <div class="upload-area">
+                <input type="file" id="fileInput" accept="image/*" hidden>
+                <div class="upload-box" id="uploadBox">
+                    <span>📁</span>
+                    <p>Click to upload image</p>
+                    <small>JPG, PNG, GIF (Max 5MB)</small>
+                </div>
+            </div>
+
+            <div id="fileList"></div>
+
+            <button id="uploadButton" class="upload-btn" disabled>
+                Upload to Google Drive
+            </button>
+        </div>
+
+        <!-- Results -->
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <h3>Uploaded Files:</h3>
+            <div id="uploadedFiles"></div>
+        </div>
+    </div>
+
+    <script src="https://accounts.google.com/gsi/client"></script>
+    <script src="script.js"></script>
+</body>
+</html>
