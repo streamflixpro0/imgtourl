@@ -3,66 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Drive Uploader</title>
+    <title>Image Uploader - Get URL</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>☁️ Google Drive Uploader</h1>
-        <p>Simple file upload to your Google Drive</p>
+        <h1>🖼️ Image Uploader</h1>
+        <p>Upload your image and get direct URL</p>
         
-        <!-- Status Message -->
-        <div id="status" class="status"></div>
-
-        <!-- Google Sign-in -->
-        <div class="auth-section">
-            <div id="g_id_onload"
-                data-client_id="583856842529-fqskfnfp60fp4fs3nefeie28ehu6b8pm.apps.googleusercontent.com"
-                data-context="signin"
-                data-ux_mode="popup"
-                data-callback="handleGoogleSignIn"
-                data-auto_prompt="false">
+        <!-- Upload Area -->
+        <div class="upload-area">
+            <input type="file" id="fileInput" accept="image/*" hidden>
+            <div class="upload-box" id="uploadBox">
+                <div class="upload-icon">📁</div>
+                <p>Click to upload image</p>
+                <small>JPG, PNG, GIF, WebP (Max 5MB)</small>
             </div>
-
-            <div class="g_id_signin"
-                data-type="standard"
-                data-shape="rectangular"
-                data-theme="filled_blue"
-                data-text="signin_with"
-                data-size="large"
-                data-logo_alignment="left">
-            </div>
-
-            <button id="signOutBtn" class="logout-btn" style="display: none;">Sign Out</button>
         </div>
 
-        <!-- User Info -->
-        <div id="userInfo" class="user-info"></div>
-
-        <!-- Upload Section -->
-        <div id="uploadSection" class="upload-section" style="display: none;">
-            <div class="upload-area">
-                <input type="file" id="fileInput" accept="image/*,.pdf,.doc,.docx" hidden>
-                <div class="upload-box" id="uploadBox">
-                    <div class="upload-icon">📁</div>
-                    <p>Click to upload file</p>
-                    <small>Max size: 5MB</small>
-                </div>
-            </div>
-
-            <!-- Selected File Info -->
-            <div id="fileInfo" class="file-info"></div>
-
-            <!-- Upload Button -->
-            <button id="uploadBtn" class="upload-btn">Upload to Google Drive</button>
+        <!-- Preview -->
+        <div class="preview-area" id="previewArea" style="display: none;">
+            <h3>Image Preview:</h3>
+            <img id="previewImage" src="" alt="Preview">
+            <button id="uploadBtn" class="upload-btn">🚀 Get Image URL</button>
         </div>
 
         <!-- Results -->
-        <div id="results" class="results"></div>
+        <div class="results-area" id="resultsArea" style="display: none;">
+            <h3>✅ Upload Successful!</h3>
+            <div class="url-container">
+                <input type="text" id="imageUrl" readonly>
+                <button onclick="copyUrl()" class="copy-btn">📋 Copy URL</button>
+            </div>
+            <div class="image-links">
+                <a href="#" id="viewLink" target="_blank" class="view-btn">👀 View Image</a>
+                <a href="#" id="downloadLink" download class="download-btn">📥 Download</a>
+            </div>
+        </div>
+
+        <!-- Loading -->
+        <div class="loading" id="loading" style="display: none;">
+            ⏳ Uploading image...
+        </div>
+
+        <!-- Services Info -->
+        <div class="info-box">
+            <h4>ℹ️ How it works:</h4>
+            <p>We upload your image to free image hosting services and provide you with direct URL.</p>
+            <div class="services">
+                <span>✅ No login required</span>
+                <span>✅ Fast upload</span>
+                <span>✅ Direct URLs</span>
+            </div>
+        </div>
     </div>
 
-    <!-- Google Identity Services -->
-    <script src="https://accounts.google.com/gsi/client"></script>
     <script src="script.js"></script>
 </body>
 </html>
