@@ -3,34 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image to URL Converter</title>
+    <title>Google Drive Uploader</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://apis.google.com/js/api.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>🖼️ Image to URL Converter</h1>
-        <p>Upload your image and get a shareable URL</p>
+        <h1>☁️ Google Drive Uploader</h1>
+        <p>Direct upload to your Google Drive and get shareable link</p>
         
-        <div class="upload-area" id="uploadArea">
-            <input type="file" id="fileInput" accept="image/*" hidden>
-            <div class="upload-box" id="uploadBox">
-                <span class="upload-icon">📁</span>
-                <p>Click to upload image</p>
-                <small>Supports: JPG, PNG, GIF, WebP</small>
-            </div>
+        <!-- Google Sign-in -->
+        <div class="auth-section" id="authSection">
+            <button id="signInButton" class="google-btn">
+                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google">
+                Sign in with Google
+            </button>
+            <button id="signOutButton" class="logout-btn" style="display: none;">
+                Sign Out
+            </button>
+            <div id="userInfo" class="user-info"></div>
         </div>
 
-        <div class="preview-area" id="previewArea" style="display: none;">
-            <h3>Image Preview:</h3>
-            <img id="previewImage" src="" alt="Preview">
-            <div class="url-result" id="urlResult">
-                <input type="text" id="urlInput" readonly>
-                <button onclick="copyURL()">Copy URL</button>
+        <!-- Upload Section -->
+        <div class="upload-section" id="uploadSection" style="display: none;">
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="fileInput" accept="image/*, video/*, .pdf, .doc, .docx" hidden multiple>
+                <div class="upload-box" id="uploadBox">
+                    <span class="upload-icon">📁</span>
+                    <p>Click to upload files</p>
+                    <small>Supports: Images, Videos, PDF, Docs (Max 10MB)</small>
+                </div>
             </div>
+
+            <div class="file-list" id="fileList"></div>
+
+            <button id="uploadButton" class="upload-btn" disabled>
+                Upload to Google Drive
+            </button>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection" style="display: none;">
+            <h3>📎 Uploaded Files:</h3>
+            <div id="uploadedFiles"></div>
         </div>
 
         <div class="loading" id="loading" style="display: none;">
-            Uploading... ⏳
+            Uploading to Google Drive... ⏳
         </div>
     </div>
 
