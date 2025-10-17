@@ -9,8 +9,11 @@
 <body>
     <div class="container">
         <h1>☁️ Google Drive Uploader</h1>
-        <p>Upload files directly to your Google Drive</p>
+        <p>Simple file upload to your Google Drive</p>
         
+        <!-- Status Message -->
+        <div id="status" class="status"></div>
+
         <!-- Google Sign-in -->
         <div class="auth-section">
             <div id="g_id_onload"
@@ -30,38 +33,35 @@
                 data-logo_alignment="left">
             </div>
 
-            <button id="signOutButton" class="logout-btn" style="display: none;" onclick="handleSignOut()">
-                Sign Out
-            </button>
-            
-            <div id="userInfo" class="user-info"></div>
+            <button id="signOutBtn" class="logout-btn" style="display: none;">Sign Out</button>
         </div>
 
+        <!-- User Info -->
+        <div id="userInfo" class="user-info"></div>
+
         <!-- Upload Section -->
-        <div class="upload-section" id="uploadSection" style="display: none;">
+        <div id="uploadSection" class="upload-section" style="display: none;">
             <div class="upload-area">
-                <input type="file" id="fileInput" accept="image/*" hidden>
+                <input type="file" id="fileInput" accept="image/*,.pdf,.doc,.docx" hidden>
                 <div class="upload-box" id="uploadBox">
-                    <span>📁</span>
-                    <p>Click to upload image</p>
-                    <small>JPG, PNG, GIF (Max 5MB)</small>
+                    <div class="upload-icon">📁</div>
+                    <p>Click to upload file</p>
+                    <small>Max size: 5MB</small>
                 </div>
             </div>
 
-            <div id="fileList"></div>
+            <!-- Selected File Info -->
+            <div id="fileInfo" class="file-info"></div>
 
-            <button id="uploadButton" class="upload-btn" disabled>
-                Upload to Google Drive
-            </button>
+            <!-- Upload Button -->
+            <button id="uploadBtn" class="upload-btn">Upload to Google Drive</button>
         </div>
 
         <!-- Results -->
-        <div class="results-section" id="resultsSection" style="display: none;">
-            <h3>Uploaded Files:</h3>
-            <div id="uploadedFiles"></div>
-        </div>
+        <div id="results" class="results"></div>
     </div>
 
+    <!-- Google Identity Services -->
     <script src="https://accounts.google.com/gsi/client"></script>
     <script src="script.js"></script>
 </body>
