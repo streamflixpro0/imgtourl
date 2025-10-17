@@ -5,24 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Drive Uploader</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Google API Libraries -->
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
 </head>
 <body>
     <div class="container">
         <h1>☁️ Google Drive Uploader</h1>
         <p>Direct upload to your Google Drive and get shareable link</p>
         
-        <!-- Google Sign-in -->
+        <!-- Simple Google Sign-in -->
         <div class="auth-section" id="authSection">
-            <button id="signInButton" class="google-btn" style="visibility: hidden;">
-                <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google">
-                Sign in with Google
-            </button>
-            <button id="signOutButton" class="logout-btn" style="display: none;">
+            <div id="g_id_onload"
+                data-client_id="YOUR_CLIENT_ID_HERE"
+                data-context="signin"
+                data-ux_mode="popup"
+                data-callback="handleGoogleSignIn"
+                data-auto_prompt="false">
+            </div>
+
+            <div class="g_id_signin"
+                data-type="standard"
+                data-shape="rectangular"
+                data-theme="outline"
+                data-text="signin_with"
+                data-size="large"
+                data-logo_alignment="left">
+            </div>
+
+            <button id="signOutButton" class="logout-btn" style="display: none;" onclick="handleSignOut()">
                 Sign Out
             </button>
+            
             <div id="userInfo" class="user-info"></div>
         </div>
 
@@ -53,14 +64,10 @@
         <div class="loading" id="loading" style="display: none;">
             ⏳ Uploading to Google Drive...
         </div>
-
-        <!-- Debug Info -->
-        <div id="debugInfo" style="display: none; margin-top: 20px; padding: 10px; background: #f5f5f5; border-radius: 5px;">
-            <h4>Debug Information:</h4>
-            <div id="debugContent"></div>
-        </div>
     </div>
 
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="script.js"></script>
 </body>
 </html>
