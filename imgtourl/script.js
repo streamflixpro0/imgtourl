@@ -1,8 +1,26 @@
-// YAHAN APNA CLIENT ID PASTE KARO
+// Configuration - YAHAN APNA CLIENT ID DAALO
 const CLIENT_ID = '583856842529-fqskfnfp60fp4fs3nefeie28ehu6b8pm.apps.googleusercontent.com';
 
+// Global variables
 let accessToken = '';
-let selectedFiles = [];
+let currentFile = null;
+
+// DOM Elements
+const statusEl = document.getElementById('status');
+const userInfoEl = document.getElementById('userInfo');
+const uploadSectionEl = document.getElementById('uploadSection');
+const signOutBtn = document.getElementById('signOutBtn');
+const fileInput = document.getElementById('fileInput');
+const uploadBox = document.getElementById('uploadBox');
+const fileInfoEl = document.getElementById('fileInfo');
+const uploadBtn = document.getElementById('uploadBtn');
+const resultsEl = document.getElementById('results');
+
+// Show status message
+function showStatus(message, type = 'info') {
+    statusEl.textContent = message;
+    statusEl.className = `status ${type}`;
+}
 
 // Google Sign-In Handler
 function handleGoogleSignIn(response) {
@@ -11,43 +29,29 @@ function handleGoogleSignIn(response) {
     if (response.credential) {
         accessToken = response.credential;
         
-        // User info show karo
-        const userData = parseJwt(accessToken);
-        document.getElementById('userInfo').innerHTML = `
-            <div style="text-align: center;">
-                <img src="${userData.picture}" width="50" style="border-radius: 50%; border: 2px solid #4285f4;">
-                <p>Welcome, <strong>${userData.name}</strong></p>
-                <small>${userData.email}</small>
-            </div>
+        // Decode user info from JWT token
+        const userData = decodeJWT(accessToken);
+        
+        // Show user info
+        userInfoEl.innerHTML = `
+            <img src="${userData.picture}" alt="Profile">
+            <h3>Welcome, ${userData.name}!</h3>
+            <p>${userData.email}</p>
         `;
         
-        // UI update karo
+        // Update UI
         document.querySelector('.g_id_signin').style.display = 'none';
-        document.getElementById('signOutButton').style.display = 'inline-block';
-        document.getElementById('uploadSection').style.display = 'block';
+        signOutBtn.style.display = 'inline-block';
+        uploadSectionEl.style.display = 'block';
         
-        showMessage('✅ Google Sign-In Successful! Ab aap files upload kar sakte hain.', 'success');
+        showStatus('✅ Google Sign-In Successful! You can now upload files.', 'success');
+        
+        console.log('Access Token:', accessToken);
     }
 }
 
-// Sign Out Handler
-function handleSignOut() {
-    accessToken = '';
-    selectedFiles = [];
-    
-    // UI reset karo
-    document.getElementById('userInfo').innerHTML = '';
-    document.querySelector('.g_id_signin').style.display = 'block';
-    document.getElementById('signOutButton').style.display = 'none';
-    document.getElementById('uploadSection').style.display = 'none';
-    document.getElementById('resultsSection').style.display = 'none';
-    document.getElementById('fileList').innerHTML = '';
-    
-    showMessage('🔓 Signed out successfully!', 'info');
-}
-
-// JWT token decode karne ke liye
-function parseJwt(token) {
+// Decode JWT token
+function decodeJWT(token) {
     try {
         const base64Url = token.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -60,290 +64,186 @@ function parseJwt(token) {
     }
 }
 
-// Message show karne ke liye
-function showMessage(message, type) {
-    // Temporary alert use karte hain
-    alert(message);
+// Sign Out Handler
+function handleSignOut() {
+    accessToken = '';
+    currentFile = null;
+    
+    // Reset UI
+    userInfoEl.innerHTML = '';
+    document.querySelector('.g_id_signin').style.display = 'block';
+    signOutBtn.style.display = 'none';
+    uploadSectionEl.style.display = 'none';
+    fileInfoEl.innerHTML = '';
+    resultsEl.innerHTML = '';
+    
+    showStatus('Signed out successfully!', 'info');
 }
 
 // File Upload Handlers
-document.getElementById('uploadBox').addEventListener('click', () => {
-    document.getElementById('fileInput').click();
+uploadBox.addEventListener('click', () => {
+    fileInput.click();
 });
 
-document.getElementById('fileInput').addEventListener('change', function(e) {
-    const files = Array.from(e.target.files);
-    selectedFiles = [];
+fileInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
     
-    files.forEach(file => {
+    if (file) {
+        // Check file size (5MB limit)
         if (file.size > 5 * 1024 * 1024) {
-            alert(`❌ "${file.name}" file bahut badi hai. Maximum size 5MB hai.`);
+            showStatus('❌ File size should be less than 5MB', 'error');
             return;
         }
-        selectedFiles.push(file);
-    });
-    
-    updateFileList();
-    updateUploadButton();
+        
+        currentFile = file;
+        
+        // Show file info
+        fileInfoEl.innerHTML = `
+            <strong>📄 Selected File:</strong> ${file.name}<br>
+            <small>Size: ${(file.size / 1024 / 1024).toFixed(2)} MB | Type: ${file.type || 'Unknown'}</small>
+        `;
+        
+        uploadBtn.disabled = false;
+        showStatus('✅ File selected. Click "Upload to Google Drive" to proceed.', 'success');
+    }
 });
 
-function updateFileList() {
-    const fileList = document.getElementById('fileList');
-    fileList.innerHTML = '';
-    
-    if (selectedFiles.length === 0) {
-        fileList.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">Koi file selected nahi hai</div>';
-        return;
-    }
-    
-    selectedFiles.forEach((file, index) => {
-        const fileItem = document.createElement('div');
-        fileItem.style.cssText = `
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 10px; 
-            margin: 5px 0; 
-            background: #f8f9fa; 
-            border-radius: 5px;
-            border: 1px solid #e9ecef;
-        `;
-        fileItem.innerHTML = `
-            <div>
-                <strong>📄 ${file.name}</strong>
-                <div style="font-size: 12px; color: #666;">${formatFileSize(file.size)}</div>
-            </div>
-            <button onclick="removeFile(${index})" style="background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">🗑️</button>
-        `;
-        fileList.appendChild(fileItem);
-    });
-}
-
-function removeFile(index) {
-    selectedFiles.splice(index, 1);
-    updateFileList();
-    updateUploadButton();
-}
-
-function formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-}
-
-function updateUploadButton() {
-    const uploadButton = document.getElementById('uploadButton');
-    uploadButton.disabled = selectedFiles.length === 0;
-    
-    if (selectedFiles.length > 0) {
-        uploadButton.innerHTML = `📤 Upload ${selectedFiles.length} File(s) to Drive`;
-    } else {
-        uploadButton.innerHTML = `📤 Upload to Google Drive`;
-    }
-}
-
-// MAIN UPLOAD FUNCTION - YAHAN FIX KIYA HAI
-document.getElementById('uploadButton').addEventListener('click', async function() {
-    if (selectedFiles.length === 0 || !accessToken) {
-        alert('❌ Pehle Google sign in karo aur file select karo!');
+// Upload to Google Drive
+uploadBtn.addEventListener('click', async function() {
+    if (!currentFile || !accessToken) {
+        showStatus('❌ Please select a file and sign in with Google', 'error');
         return;
     }
     
     const button = this;
     const originalText = button.innerHTML;
+    
+    // Disable button and show loading
     button.disabled = true;
     button.innerHTML = '⏳ Uploading...';
+    showStatus('Uploading file to Google Drive...', 'info');
     
     try {
-        let successCount = 0;
+        // Upload file to Google Drive
+        const result = await uploadToDrive(currentFile);
         
-        for (const file of selectedFiles) {
-            const result = await uploadFileToDrive(file);
-            if (result) successCount++;
-        }
-        
-        if (successCount > 0) {
-            showMessage(`✅ ${successCount} file(s) successfully uploaded to Google Drive!`, 'success');
-            document.getElementById('resultsSection').style.display = 'block';
+        if (result) {
+            showStatus('✅ File uploaded successfully to Google Drive!', 'success');
+            showResult(result);
         }
         
     } catch (error) {
         console.error('Upload error:', error);
-        showMessage(`❌ Upload failed: ${error.message}`, 'error');
+        showStatus(`❌ Upload failed: ${error.message}`, 'error');
     } finally {
+        // Reset button
         button.disabled = false;
         button.innerHTML = originalText;
-        selectedFiles = [];
-        updateFileList();
-        updateUploadButton();
+        currentFile = null;
+        fileInfoEl.innerHTML = '';
     }
 });
 
-// ACTUAL FILE UPLOAD FUNCTION
-async function uploadFileToDrive(file) {
-    console.log('Uploading file:', file.name, 'Size:', file.size);
+// Main upload function
+async function uploadToDrive(file) {
+    console.log('Starting upload for file:', file.name);
     
-    try {
-        // Step 1: Pehle file metadata create karo
-        const metadata = {
-            name: file.name,
-            mimeType: file.type || 'application/octet-stream',
-            parents: ['root'] // Root folder mein upload hoga
-        };
+    // Create file metadata
+    const metadata = {
+        name: file.name,
+        mimeType: file.type || 'application/octet-stream',
+        parents: ['root'] // Upload to root folder
+    };
 
-        // Step 2: FormData prepare karo
-        const formData = new FormData();
-        formData.append('metadata', new Blob([JSON.stringify(metadata)], { 
-            type: 'application/json' 
-        }));
-        formData.append('file', file);
+    // Create FormData
+    const formData = new FormData();
+    formData.append('metadata', new Blob([JSON.stringify(metadata)], { 
+        type: 'application/json' 
+    }));
+    formData.append('file', file);
 
-        // Step 3: Google Drive API call karo
-        const response = await fetch(
-            'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,webViewLink,webContentLink', 
-            {
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Bearer ' + accessToken
-                    // Content-Type automatically set hoti hai FormData ke saath
-                },
-                body: formData
-            }
-        );
-
-        console.log('Response status:', response.status);
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('Error response:', errorText);
-            
-            let errorMessage = `HTTP ${response.status}: `;
-            
-            try {
-                const errorData = JSON.parse(errorText);
-                errorMessage += errorData.error?.message || errorText;
-            } catch {
-                errorMessage += errorText;
-            }
-            
-            throw new Error(errorMessage);
-        }
-
-        // Step 4: Response handle karo
-        const result = await response.json();
-        console.log('Upload successful:', result);
-        
-        // Step 5: File publicly accessible banao (optional)
-        try {
-            await makeFilePublic(result.id);
-        } catch (publicError) {
-            console.warn('File public nahi kar paye, lekin upload successful:', publicError);
-        }
-        
-        // Step 6: Result show karo
-        displayUploadResult(result);
-        
-        return result;
-        
-    } catch (error) {
-        console.error('Upload failed for file:', file.name, error);
-        
-        // Specific error messages
-        if (error.message.includes('403')) {
-            throw new Error('Permission denied. Google Drive API enable hai?');
-        } else if (error.message.includes('401')) {
-            throw new Error('Authentication failed. Phir se sign in karo.');
-        } else if (error.message.includes('400')) {
-            throw new Error('Invalid request. File format supported nahi hai.');
-        } else {
-            throw new Error(`Upload failed: ${error.message}`);
-        }
-    }
-}
-
-// File publicly accessible banane ke liye
-async function makeFilePublic(fileId) {
+    // Upload to Google Drive
     const response = await fetch(
-        `https://www.googleapis.com/drive/v3/files/${fileId}/permissions`,
+        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,webViewLink', 
         {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer ' + accessToken,
-                'Content-Type': 'application/json'
+                'Authorization': 'Bearer ' + accessToken
             },
-            body: JSON.stringify({
-                type: 'anyone',
-                role: 'reader'
-            })
+            body: formData
         }
     );
+
+    console.log('Upload response status:', response.status);
     
     if (!response.ok) {
-        throw new Error('File public nahi kar paye');
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        
+        let errorMessage = 'Upload failed: ';
+        
+        if (response.status === 401) {
+            errorMessage += 'Authentication failed. Please sign in again.';
+        } else if (response.status === 403) {
+            errorMessage += 'Permission denied. Check Google Drive API settings.';
+        } else {
+            errorMessage += `HTTP ${response.status}`;
+        }
+        
+        throw new Error(errorMessage);
     }
+
+    const result = await response.json();
+    console.log('Upload successful:', result);
     
-    return await response.json();
+    return result;
 }
 
-// Upload result show karne ke liye
-function displayUploadResult(fileData) {
-    const uploadedFiles = document.getElementById('uploadedFiles');
-    
-    const fileElement = document.createElement('div');
-    fileElement.style.cssText = `
-        background: #e8f5e8;
-        border: 1px solid #34a853;
-        border-radius: 8px;
-        padding: 15px;
-        margin: 10px 0;
-    `;
-    
-    fileElement.innerHTML = `
-        <div style="margin-bottom: 10px;">
-            <strong>✅ ${fileData.name}</strong>
-            <div style="font-size: 12px; color: #666;">File ID: ${fileData.id}</div>
-        </div>
-        
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <input type="text" 
-                   value="https://drive.google.com/file/d/${fileData.id}/view" 
-                   readonly 
-                   style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
-            <button onclick="copyLink(this)" 
-                    style="background: #4285f4; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">
-                📋 Copy
-            </button>
-        </div>
-        
-        <div style="margin-top: 10px;">
-            <a href="https://drive.google.com/file/d/${fileData.id}/view" 
-               target="_blank" 
-               style="color: #4285f4; text-decoration: none; font-size: 14px;">
-               👀 View in Google Drive
-            </a>
+// Show upload result
+function showResult(fileData) {
+    resultsEl.innerHTML = `
+        <div class="uploaded-file">
+            <h3>✅ Upload Successful!</h3>
+            <p><strong>File:</strong> ${fileData.name}</p>
+            <p><strong>File ID:</strong> ${fileData.id}</p>
+            
+            <div class="file-link">
+                <input type="text" 
+                       value="https://drive.google.com/file/d/${fileData.id}/view" 
+                       readonly 
+                       id="fileLink">
+                <button class="copy-btn" onclick="copyToClipboard()">📋 Copy Link</button>
+            </div>
+            
+            <p style="margin-top: 10px;">
+                <a href="https://drive.google.com/file/d/${fileData.id}/view" 
+                   target="_blank" 
+                   style="color: #4285f4; text-decoration: none;">
+                   👀 Open in Google Drive
+                </a>
+            </p>
         </div>
     `;
-    
-    uploadedFiles.appendChild(fileElement);
 }
 
-// Link copy karne ke liye
-function copyLink(button) {
-    const input = button.parentElement.querySelector('input');
-    input.select();
+// Copy to clipboard
+function copyToClipboard() {
+    const fileLink = document.getElementById('fileLink');
+    fileLink.select();
     document.execCommand('copy');
     
-    // Visual feedback
-    button.innerHTML = '✅ Copied!';
-    button.style.background = '#34a853';
+    const copyBtn = document.querySelector('.copy-btn');
+    copyBtn.textContent = '✅ Copied!';
+    copyBtn.style.background = '#34a853';
     
     setTimeout(() => {
-        button.innerHTML = '📋 Copy';
-        button.style.background = '#4285f4';
+        copyBtn.textContent = '📋 Copy Link';
+        copyBtn.style.background = '#4285f4';
     }, 2000);
 }
 
-// Debug info
-console.log('Script loaded successfully');
+// Event listeners
+signOutBtn.addEventListener('click', handleSignOut);
+
+// Initialize
+showStatus('🔧 Please sign in with Google to start uploading files.', 'info');
