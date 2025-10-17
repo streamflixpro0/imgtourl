@@ -1,6 +1,6 @@
 // Google API Configuration
-const CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID';
-const API_KEY = 'YOUR_GOOGLE_API_KEY';
+const CLIENT_ID = '306306213575-5rmoacua8fvj0okv7l1c8p0qmmau9863.apps.googleusercontent.com';
+const API_KEY = 'AIzaSyCA4kIfqX0pOgJ3jjYM-lE0Ynmiub80VWU';
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
 let gapiInited = false;
