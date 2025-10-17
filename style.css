@@ -1,39 +1,10 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
-    min-height: 100vh;
-    padding: 20px;
-    color: #333;
-}
-
-.container {
-    max-width: 700px;
-    margin: 0 auto;
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-h1 {
+/* Google Sign-in Button Styling */
+.g_id_signin {
+    margin: 20px auto;
     text-align: center;
-    color: #4285f4;
-    margin-bottom: 10px;
 }
 
-p {
-    text-align: center;
-    color: #666;
-    margin-bottom: 30px;
-}
-
-/* Google Sign-in Button */
+/* Rest of the CSS same as before */
 .google-btn {
     display: flex;
     align-items: center;
@@ -45,18 +16,13 @@ p {
     border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
-    margin: 0 auto;
+    margin: 20px auto;
     transition: all 0.3s ease;
 }
 
 .google-btn:hover {
     background: #f8f9fa;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.google-btn img {
-    width: 20px;
-    height: 20px;
 }
 
 .logout-btn {
@@ -66,181 +32,17 @@ p {
     padding: 10px 20px;
     border-radius: 8px;
     cursor: pointer;
-    margin-left: 10px;
+    margin: 10px auto;
+    display: block;
 }
 
 .user-info {
-    margin-top: 15px;
+    margin: 15px 0;
     text-align: center;
-    font-weight: 500;
-    color: #4285f4;
-}
-
-/* Upload Section */
-.upload-section {
-    margin-top: 30px;
-}
-
-.upload-area {
-    margin: 20px 0;
-}
-
-.upload-box {
-    border: 3px dashed #4285f4;
-    border-radius: 10px;
-    padding: 40px 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: #f8f9ff;
-}
-
-.upload-box:hover {
-    background: #e8f0fe;
-    border-color: #34a853;
-}
-
-.upload-icon {
-    font-size: 50px;
-    display: block;
-    margin-bottom: 10px;
-}
-
-.upload-box p {
-    font-size: 18px;
-    color: #333;
-    margin-bottom: 5px;
-}
-
-.upload-box small {
-    color: #888;
-}
-
-/* File List */
-.file-list {
-    margin: 20px 0;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.file-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    margin-bottom: 5px;
-    background: #fafafa;
-}
-
-.file-name {
-    flex: 1;
-    font-size: 14px;
-}
-
-.file-size {
-    color: #666;
-    font-size: 12px;
-    margin-right: 10px;
-}
-
-.remove-file {
-    background: #ea4335;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 12px;
-}
-
-/* Buttons */
-.upload-btn {
-    width: 100%;
-    background: #34a853;
-    color: white;
-    border: none;
     padding: 15px;
+    background: #f8f9fa;
     border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: background 0.3s ease;
-    margin-top: 20px;
+    border: 1px solid #e9ecef;
 }
 
-.upload-btn:hover:not(:disabled) {
-    background: #2d9248;
-}
-
-.upload-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-}
-
-/* Results */
-.results-section {
-    margin-top: 30px;
-}
-
-.uploaded-file {
-    background: #e8f5e8;
-    border: 1px solid #34a853;
-    border-radius: 8px;
-    padding: 15px;
-    margin: 10px 0;
-}
-
-.file-link {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.file-link input {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.copy-btn {
-    background: #4285f4;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.copy-btn:hover {
-    background: #3367d6;
-}
-
-.loading {
-    text-align: center;
-    font-size: 18px;
-    color: #4285f4;
-    margin: 20px 0;
-    padding: 20px;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-    .container {
-        padding: 20px;
-        margin: 10px;
-    }
-    
-    .file-link {
-        flex-direction: column;
-    }
-    
-    .google-btn {
-        width: 100%;
-        justify-content: center;
-    }
-}
+/* Rest of your existing CSS remains same */
